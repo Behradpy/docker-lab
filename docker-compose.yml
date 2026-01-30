@@ -1,1 +1,55 @@
+version: '3.8'
 
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"  # Exposed for dev; proxied in prod
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://backend:5000
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis  # If using cache
+    environment:
+      - DATABASE_URL=postgres://user:pass@db:5432/tododb
+      - REDIS_URL=redis://redis:6379
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=tododb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    driver: bridge
