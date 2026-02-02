@@ -1,0 +1,12 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "service.js",
+  "scripts": {
+    "start": "node service.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
