@@ -6,7 +6,7 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_URL=http://backend:5000
+      - VITE_API_URL=/api
 
   backend:
     build: ./backend
@@ -23,6 +23,7 @@ services:
     environment:
       - DATABASE_URL=postgres://user:pass@db:5432/tododb
       - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=supersecret_change_me
 
   db:
     image: postgres:15
